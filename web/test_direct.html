@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>GPT-2 Direct Test</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1a1a2e;
+            color: #eee;
+        }
+
+        #output {
+            white-space: pre-wrap;
+            background: #16213e;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>GPT-2 Direct Test (No Hologram)</h1>
+    <p>This test bypasses hologram loading to verify the forward pass works correctly.</p>
+    <button id="btnTest">Run Test</button>
+    <div id="output">Click "Run Test" to start...</div>
+
+    <script type="module">
+        import { ResonatorEngine } from './engine.js';
+
+        const output = document.getElementById('output');
+        const log = (msg) => { output.textContent += msg + '\n'; console.log(msg); };
+
+        document.getElementById('btnTest').onclick = async () => {
+            output.textContent = '';
+            log('Initializing engine...');
+
+            try {
+                const engine = new ResonatorEngine();
+                await engine.init();
+                log('Engine initialized.');
+
+                log('Loading weights...');
+                await engine.loadWeights('gpt2_weights.bin');
+                log('Weights loaded.');
+
+                // Test: Generate from token "Hello" (ID: 15496)
+                const startToken = 15496;
+                log(`\nGenerating 10 tokens starting from token ${startToken} ("Hello"):`);
+                log('Note: seqLen starts at 0 (no hologram, fresh generation)');
+
+                let currentToken = startToken;
+                let tokens = [currentToken];
+
+                for (let i = 0; i < 10; i++) {
+                    log(`\nStep ${i}: input token = ${currentToken}, seqLen = ${engine.seqLen}`);
+                    const nextToken = await engine.step(currentToken);
+                    log(`Output token: ${nextToken}`);
+                    tokens.push(nextToken);
+                    currentToken = nextToken;
+                }
+
+                log('\n=== FINAL TOKENS ===');
+                log(tokens.join(' -> '));
+
+            } catch (e) {
+                log('ERROR: ' + e.message);
+                console.error(e);
+            }
+        };
+    </script>
+</body>
+
+</html>

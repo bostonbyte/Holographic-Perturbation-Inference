@@ -1,0 +1,28 @@
+# Large Model Weights
+web/gpt2_weights.bin
+
+# Holographic Protocol Files
+web/*.holo
+server/*.holo
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.venv/
+.env
+
+# Web & Local Cache
+web/cache/
+node_modules/
+
+# OS Specific
+.DS_Store
+Thumbs.db
+
+# Project Docs & Experiments
+docs/projectPlan.txt
+experiments/verify_*.py
+experiments/test_protocol.py
+

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HPI: Resonator Benchmark</title>
+    <style>
+        body {
+            font-family: monospace;
+            background: #111;
+            color: #0f0;
+            padding: 20px;
+        }
+
+        #log {
+            white-space: pre-wrap;
+            margin-top: 20px;
+            border: 1px solid #333;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll;
+        }
+
+        button {
+            background: #0f0;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Holographic Perturbation Inference</h1>
+    <h2>Phase 2: The Resonator (WebGPU)</h2>
+
+    <div id="controls">
+        <button id="btnRun">Run Benchmark</button>
+        <button id="btnLoad">Load Protocol Test</button>
+    </div>
+
+    <div id="log">Logs will appear here...</div>
+
+    <script type="module">
+        import { HoloLoader } from './loader.js';
+
+        function log(msg) {
+            document.getElementById("log").innerText += msg + "\n";
+            console.log(msg);
+        }
+
+        document.getElementById("btnLoad").onclick = async () => {
+            log("Loading test.holo...");
+            try {
+                const holo = await HoloLoader.load('test.holo');
+                log("Success!");
+                log(`Loaded Hologram: ${holo.numLayers} Layers, Rank ${holo.rank}`);
+                log(`Sample Value (L0 H0 U[0]): ${holo.layers[0][0].u[0]}`);
+            } catch (e) {
+                log(`Error: ${e.message}`);
+                console.error(e);
+            }
+        };
+    </script>
+
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
